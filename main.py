@@ -22,7 +22,7 @@ end = dt.datetime(2020, 1, 1)
 data = web.DataReader(company, 'yahoo', start, end)
 
 # Prepare Data
-scaler = MinMaxScaler(feature_range=(0, 1))  # Was passiert hier genau?
+scaler = MinMaxScaler(feature_range=(0, 1))
 scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # Closing price is predicted
 
 prediciton_days = 70  # For prediciton: how many days look back? Here 70 days
@@ -31,11 +31,11 @@ x_train = []
 y_train = []
 
 for x in range(prediciton_days, len(scaled_data)):
-    x_train.append(scaled_data[x - prediciton_days:x, 0])  # We start at x minus prediciton bis
+    x_train.append(scaled_data[x - prediciton_days:x, 0])
     y_train.append(scaled_data[x, 0])
 
 x_train, y_train = np.array(x_train), np.array(y_train)
-x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))  # Verstehen!
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
 # Build model
 
@@ -51,11 +51,9 @@ model.add(Dense(units=1))  # Prediciton of the next closing price
 
 model.compile(optimizer='adam', loss='mean_squared_error')  # different optimizer functions!
 model.fit(x_train, y_train, epochs=epochs,
-          batch_size=batchsize)  # Batchsize: Model sees 32 batches at once all the time
+          batch_size=batchsize)  # Batchsize: Model sees xx batches at once all the time
 
 # Test the Model Accuracy on Existing Data
-
-
 # Load Test Data
 
 test_start = dt.datetime.now() - dt.timedelta(150)
@@ -70,7 +68,7 @@ model_inputs = total_dataset[len(total_dataset) - len(test_data) - prediciton_da
 model_inputs = model_inputs.reshape(-1, 1)
 model_inputs = scaler.transform(model_inputs)
 
-# Make predicitons on test data
+# Make predictions on test data
 
 x_test = []
 
@@ -83,7 +81,7 @@ x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 predicted_prices = model.predict(x_test)
 predicted_prices = scaler.inverse_transform(predicted_prices)
 
-# Plot test predicitons
+# Plot test predictions
 
 plt.plot(actual_prices[-150:], color="black", label="actual_price")
 plt.plot(predicted_prices[-150:], color="green", label="predicted_price")
